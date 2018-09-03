@@ -1,4 +1,4 @@
-# withhost
+# withhost [![Linux Build Status](https://travis-ci.org/Xyene/withhost.svg?branch=master)](https://travis-ci.org/Xyene/withhost)
 
 `withhost` is a utility that allows overriding DNS lookups for a given command invocation. It works on Linux and FreeBSD.
 
