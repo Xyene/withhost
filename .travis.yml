@@ -1,0 +1,11 @@
+language: c
+compiler:
+  - clang
+  - gcc
+script:
+  - mkdir bin
+  - cd bin
+  - autoreconf -i
+  - ../configure --prefix=${HOME}
+  - make
+  - make install
