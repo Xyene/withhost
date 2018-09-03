@@ -23,7 +23,7 @@ $ withhost --host example.com=10.0.0.1 -- getent hosts 10.0.0.1
 $ sudo withhost --host example.com=10.0.0.1 -- ping example.com
 PING example.com (10.0.0.1) 56(84) bytes of data.
 ^C
-$ eval $(withhost --host example.com 10.0.0.1 --export)
+$ eval $(withhost --host example.com=10.0.0.1 --export)
 $ getent hosts 10.0.0.1
 10.0.0.1        example.com
 
