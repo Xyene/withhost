@@ -6,7 +6,7 @@ Some potential use-cases include accessing backend nodes behind a load balancer,
 
 ## Usage
 ```
-usage: withhost [-h <host>] [--export] [--help] -- [prog]
+usage: withhost [-h <host>] [--export] [--version] [--help] -- [prog]
 
 Overrides host lookups for a given command.
 
@@ -29,7 +29,8 @@ $ getent hosts 10.0.0.1
 
 optional arguments:
   -h <host>, --host <host>  specifies a host entry, in the format ${hostname}=${ip_address}
-  --export                  writes environment variables to standard output
+  --export                  write environment variables to standard output
+  --version                 write version string to standard output
   --help                    show this help message and exit
 ```
 

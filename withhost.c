@@ -33,8 +33,8 @@ static char *help_text = "usage: "PACKAGE_NAME" [-h <host>] [--export] "
 "optional arguments:\n"
 "  -h <host>, --host <host>  specifies a host entry, in the format "
 "${hostname}=${ip_address}\n"
-"  --export                  writes environment variables to standard output\n"
-"  --version                 writes version string to standard output\n"
+"  --export                  write environment variables to standard output\n"
+"  --version                 write version string to standard output\n"
 "  --help                    show this help message and exit\n";
 static int flag_version;
 static int flag_help;
