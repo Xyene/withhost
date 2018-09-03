@@ -8,7 +8,8 @@
 #include <unistd.h>
 #include <getopt.h>
 
-static char *help_text = "usage: withhost [-h <host>] [--export] [--help] -- [prog]\n"
+static char *help_text = "usage: "PACKAGE_NAME" [-h <host>] [--export] "
+"[--version] [--help] -- [prog]\n"
 "\n"
 "Overrides host lookups for a given command.\n"
 "\n"
@@ -33,11 +34,14 @@ static char *help_text = "usage: withhost [-h <host>] [--export] [--help] -- [pr
 "  -h <host>, --host <host>  specifies a host entry, in the format "
 "${hostname}=${ip_address}\n"
 "  --export                  writes environment variables to standard output\n"
+"  --version                 writes version string to standard output\n"
 "  --help                    show this help message and exit\n";
+static int flag_version;
 static int flag_help;
 static int flag_export;
 static struct option long_options[] = {
   {"host", required_argument, NULL, 'h'},
+  {"version", no_argument, &flag_version, 1},
   {"export", no_argument, &flag_export, 1},
   {"help", no_argument, &flag_help, 1},
   {NULL, 0, NULL, 0}
@@ -61,6 +65,11 @@ int main(int argc, char **argv) {
 
         break;
     }
+  }
+
+  if (flag_version) {
+    printf("%s %s\n", PACKAGE_NAME, PACKAGE_VERSION);
+    return 0;
   }
 
   if (flag_help) {
