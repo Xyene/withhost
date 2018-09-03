@@ -73,7 +73,7 @@ int main(int argc, char **argv) {
   }
 
   if (flag_help) {
-    printf(help_text);
+    printf("%s", help_text);
     return 0;
   }
 
