@@ -5,7 +5,7 @@ compiler:
 script:
   - mkdir bin
   - cd bin
-  - autoreconf -i
+  - autoreconf -i ..
   - ../configure --prefix=${HOME}
   - make
   - make install
