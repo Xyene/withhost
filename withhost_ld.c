@@ -100,6 +100,8 @@ __attribute__((constructor)) static void setup(void) {
     fprintf(hosts_file, "%s", buf);
   }
 
+  fclose(real_hosts_file);
+
 end:
   fclose(hosts_file);
 }
