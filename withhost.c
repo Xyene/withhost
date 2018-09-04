@@ -1,50 +1,54 @@
-#define _GNU_SOURCE  
+#define _GNU_SOURCE
 
 #include <err.h>
+#include <getopt.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
-#include <getopt.h>
 
-static char *help_text = "usage: "PACKAGE_NAME" [-h <host>] [--export] "
-"[--version] [--help] -- [prog]\n"
-"\n"
-"Overrides host lookups for a given command.\n"
-"\n"
-"withhost can be used to override the response to a DNS lookup for a given\n"
-"set of domains. Functionally, it is equivalent to adding /etc/hosts entries\n"
-"manually, except it is local for a given command.\n"
-"\n"
-"For setuid executables, withhost must be invoked with root privileges,\n"
-"otherwise it will not work.\n"
-"\n"
-"Examples:\n"
-"$ withhost --host example.com=10.0.0.1 -- getent hosts 10.0.0.1\n"
-"10.0.0.1        example.com\n"
-"$ sudo withhost --host example.com=10.0.0.1 -- ping example.com\n"
-"PING example.com (10.0.0.1) 56(84) bytes of data.\n"
-"^C\n"
-"$ eval $(withhost --host example.com=10.0.0.1 --export)\n"
-"$ getent hosts 10.0.0.1\n"
-"10.0.0.1        example.com\n"
-"\n"
-"optional arguments:\n"
-"  -h <host>, --host <host>  specifies a host entry, in the format "
-"${hostname}=${ip_address}\n"
-"  --export                  write environment variables to standard output\n"
-"  --version                 write version string to standard output\n"
-"  --help                    show this help message and exit\n";
+static char *help_text =
+    "usage: " PACKAGE_NAME " [-h <host>] [--export] "
+    "[--version] [--help] -- [prog]\n"
+    "\n"
+    "Overrides host lookups for a given command.\n"
+    "\n"
+    "withhost can be used to override the response to a DNS lookup for a "
+    "given\n"
+    "set of domains. Functionally, it is equivalent to adding /etc/hosts "
+    "entries\n"
+    "manually, except it is local for a given command.\n"
+    "\n"
+    "For setuid executables, withhost must be invoked with root privileges,\n"
+    "otherwise it will not work.\n"
+    "\n"
+    "Examples:\n"
+    "$ withhost --host example.com=10.0.0.1 -- getent hosts 10.0.0.1\n"
+    "10.0.0.1        example.com\n"
+    "$ sudo withhost --host example.com=10.0.0.1 -- ping example.com\n"
+    "PING example.com (10.0.0.1) 56(84) bytes of data.\n"
+    "^C\n"
+    "$ eval $(withhost --host example.com=10.0.0.1 --export)\n"
+    "$ getent hosts 10.0.0.1\n"
+    "10.0.0.1        example.com\n"
+    "\n"
+    "optional arguments:\n"
+    "  -h <host>, --host <host>  specifies a host entry, in the format "
+    "${hostname}=${ip_address}\n"
+    "  --export                  write environment variables to standard "
+    "output\n"
+    "  --version                 write version string to standard output\n"
+    "  --help                    show this help message and exit\n";
 static int flag_version;
 static int flag_help;
 static int flag_export;
 static struct option long_options[] = {
-  {"host", required_argument, NULL, 'h'},
-  {"version", no_argument, &flag_version, 1},
-  {"export", no_argument, &flag_export, 1},
-  {"help", no_argument, &flag_help, 1},
-  {NULL, 0, NULL, 0}
+    {"host", required_argument, NULL, 'h'},
+    {"version", no_argument, &flag_version, 1},
+    {"export", no_argument, &flag_export, 1},
+    {"help", no_argument, &flag_help, 1},
+    {NULL, 0, NULL, 0},
 };
 
 int main(int argc, char **argv) {
@@ -53,17 +57,17 @@ int main(int argc, char **argv) {
   int c;
   while ((c = getopt_long(argc, argv, "h:", long_options, NULL)) != -1) {
     switch (c) {
-      case 'h':
-        if (host_env) {
-          char *new_env;
-          asprintf(&new_env, "%s#%s", host_env, optarg);
-          free(host_env);
-          host_env = new_env;
-        } else {
-          host_env = strdup(optarg);
-        }
+    case 'h':
+      if (host_env) {
+        char *new_env;
+        asprintf(&new_env, "%s#%s", host_env, optarg);
+        free(host_env);
+        host_env = new_env;
+      } else {
+        host_env = strdup(optarg);
+      }
 
-        break;
+      break;
     }
   }
 
@@ -85,7 +89,7 @@ int main(int argc, char **argv) {
     err(EXIT_FAILURE, "cannot set LD_WITHHOST_OVERRIDES env");
   }
 
-  char *preload_path = strdup(LIBDIR"/libwithhost.so");
+  char *preload_path = strdup(LIBDIR "/libwithhost.so");
   if (access(preload_path, F_OK) == -1) {
     errx(EXIT_FAILURE, "cannot find libwithhost, expected at '%s'",
          preload_path);
