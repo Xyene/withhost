@@ -110,8 +110,8 @@ int main(int argc, char **argv) {
   }
 
   if (flag_export) {
-    printf("LD_PRELOAD=%s\n", ld_preload);
-    printf("LD_WITHHOST_OVERRIDES=%s\n", host_env);
+    printf("export LD_PRELOAD=%s\n", ld_preload);
+    printf("export LD_WITHHOST_OVERRIDES=%s\n", host_env);
     return 0;
   }
 
