@@ -6,7 +6,7 @@ Some potential use-cases include accessing backend nodes behind a load balancer,
 
 ## Usage
 ```
-usage: withhost [-h <host>] [--export] [--version] [--help] -- [prog]
+usage: withhost [-h <host>] [--export] [--version] [--help] -- [<program> ...]
 
 Overrides host lookups for a given command.
 

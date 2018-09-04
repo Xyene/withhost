@@ -10,7 +10,7 @@
 
 static char *help_text =
     "usage: " PACKAGE_NAME " [-h <host>] [--export] "
-    "[--version] [--help] -- [prog]\n"
+    "[--version] [--help] -- [<program> ...]\n"
     "\n"
     "Overrides host lookups for a given command.\n"
     "\n"
