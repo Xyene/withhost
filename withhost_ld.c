@@ -14,7 +14,7 @@
 
 #define _ETC_HOSTS "/etc/hosts"
 
-char *hosts_path;
+char *hosts_path = NULL;
 
 typedef FILE *(*fopen_t)(const char *pathname, const char *mode);
 fopen_t real_fopen;
@@ -29,16 +29,15 @@ FILE *fopen(const char *pathname, const char *mode) {
   // If the call is to open /etc/hosts, redirect it to point to our patched
   // hosts file. Note that when we need to fopen /etc/hosts for reading, we do
   // so directly with |real_fopen|.
-  if (!strcmp(pathname, _ETC_HOSTS)) {
+  if (hosts_path && !strcmp(pathname, _ETC_HOSTS)) {
     pathname = hosts_path;
   }
 
+  real_fopen = dlsym(RTLD_NEXT, "fopen");
   return real_fopen(pathname, mode);
 }
 
-__attribute__((constructor)) static void setup() {
-  real_fopen = dlsym(RTLD_NEXT, "fopen");
-
+__attribute__((constructor)) static void setup(void) {
   char *env_overrides = getenv("LD_WITHHOST_OVERRIDES");
   if (!env_overrides) {
     return;
@@ -95,7 +94,7 @@ end:
   fclose(hosts_file);
 }
 
-__attribute__((destructor)) static void cleanup() {
+__attribute__((destructor)) static void cleanup(void) {
   if (hosts_path) {
     remove(hosts_path);
   }
