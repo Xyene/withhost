@@ -12,7 +12,9 @@ Overrides host lookups for a given command.
 
 withhost can be used to override the response to a DNS lookup for a given
 set of domains. Functionally, it is equivalent to adding /etc/hosts entries
-manually, except it is local for a given command.
+manually, except it is local for a given command. That is, /etc/hosts
+should be prioritized over DNS responses in /etc/nsswitch.conf for this
+utility to work well.
 
 For setuid executables, withhost must be invoked with root privileges,
 otherwise it will not work.
@@ -48,6 +50,9 @@ $ make install
 ```
 
 ## Miscellaneous
+
+### `/etc/nsswitch.conf` resolution order
+For `withhost` to work correctly, `files` must be prioritized over everything in the `hosts` entry of `/etc/nsswitch.conf`. On default installations, it usually is. Otherwise, a DNS response may be trusted over the entry in `/etc/hosts`, making `withhost` useful only for defining non-existent (e.g. NXDOMAIN) hosts.
 
 ### Working with `setuid` executables
 `setuid` executables will generally ignore `LD_PRELOAD`, which `withhost` uses to provide its functionality. Notably, `ping` does this to open raw sockets. `withhost` must be invoked as root when running these kinds of executables.
