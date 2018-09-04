@@ -17,7 +17,6 @@
 char *hosts_path = NULL;
 
 typedef FILE *(*fopen_t)(const char *pathname, const char *mode);
-fopen_t real_fopen;
 
 bool is_valid_address(const char *buf) {
   char ip_buf[INET6_ADDRSTRLEN];
@@ -33,7 +32,7 @@ FILE *fopen(const char *pathname, const char *mode) {
     pathname = hosts_path;
   }
 
-  real_fopen = dlsym(RTLD_NEXT, "fopen");
+  fopen_t real_fopen = dlsym(RTLD_NEXT, "fopen");
   return real_fopen(pathname, mode);
 }
 
