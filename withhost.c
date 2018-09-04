@@ -9,8 +9,8 @@
 #include <unistd.h>
 
 static char *help_text =
-    "usage: " PACKAGE_NAME " [-h <host>] [--export] "
-    "[--version] [--help] -- [<program> ...]\n"
+    "usage: " PACKAGE_NAME
+    " [-h <host>] [--export] [--version] [--help] -- [<program> ...]\n"
     "\n"
     "Overrides host lookups for a given command.\n"
     "\n"
@@ -59,17 +59,17 @@ int main(int argc, char **argv) {
   int c;
   while ((c = getopt_long(argc, argv, "h:", long_options, NULL)) != -1) {
     switch (c) {
-    case 'h':
-      if (host_env) {
-        char *new_env;
-        asprintf(&new_env, "%s#%s", host_env, optarg);
-        free(host_env);
-        host_env = new_env;
-      } else {
-        host_env = strdup(optarg);
-      }
+      case 'h':
+        if (host_env) {
+          char *new_env;
+          asprintf(&new_env, "%s#%s", host_env, optarg);
+          free(host_env);
+          host_env = new_env;
+        } else {
+          host_env = strdup(optarg);
+        }
 
-      break;
+        break;
     }
   }
 

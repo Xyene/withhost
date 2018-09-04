@@ -14,9 +14,21 @@
 
 #define _ETC_HOSTS "/etc/hosts"
 
-char *hosts_path = NULL;
+char *hosts_path;
 
 typedef FILE *(*fopen_t)(const char *pathname, const char *mode);
+fopen_t real_fopen;
+
+FILE *do_fopen(const char *pathname, const char *mode) {
+  // This wrapper is necessary since sometimes `fopen` is called before the
+  // constructor, so we have two separate points where this lookup might need
+  // to be performed.
+  if (!real_fopen) {
+    real_fopen = dlsym(RTLD_NEXT, "fopen");
+  }
+
+  return real_fopen(pathname, mode);
+}
 
 bool is_valid_address(const char *buf) {
   char ip_buf[INET6_ADDRSTRLEN];
@@ -27,13 +39,12 @@ bool is_valid_address(const char *buf) {
 FILE *fopen(const char *pathname, const char *mode) {
   // If the call is to open /etc/hosts, redirect it to point to our patched
   // hosts file. Note that when we need to fopen /etc/hosts for reading, we do
-  // so directly with |real_fopen|.
+  // so directly with |do_fopen|.
   if (hosts_path && !strcmp(pathname, _ETC_HOSTS)) {
     pathname = hosts_path;
   }
 
-  fopen_t real_fopen = dlsym(RTLD_NEXT, "fopen");
-  return real_fopen(pathname, mode);
+  return do_fopen(pathname, mode);
 }
 
 __attribute__((constructor)) static void setup(void) {
@@ -78,7 +89,7 @@ __attribute__((constructor)) static void setup(void) {
   free(host_overrides);
 
   // Append the real /etc/hosts file.
-  FILE *real_hosts_file = real_fopen(_ETC_HOSTS, "r");
+  FILE *real_hosts_file = do_fopen(_ETC_HOSTS, "r");
   if (!real_hosts_file) {
     warnx("could not read /etc/hosts");
     goto end;
