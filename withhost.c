@@ -10,7 +10,7 @@
 
 static char *help_text =
     "usage: " PACKAGE_NAME
-    " [-h <host>] [--export] [--version] [--help] -- [<program> ...]\n"
+    " [-h <host>] [--export] [--version] [--help] [<program> ...]\n"
     "\n"
     "Overrides host lookups for a given command.\n"
     "\n"
@@ -26,9 +26,9 @@ static char *help_text =
     "otherwise it will not work.\n"
     "\n"
     "Examples:\n"
-    "$ withhost --host example.com=10.0.0.1 -- getent hosts 10.0.0.1\n"
+    "$ withhost --host example.com=10.0.0.1 getent hosts 10.0.0.1\n"
     "10.0.0.1        example.com\n"
-    "$ sudo withhost --host example.com=10.0.0.1 -- ping example.com\n"
+    "$ sudo withhost --host example.com=10.0.0.1 ping example.com\n"
     "PING example.com (10.0.0.1) 56(84) bytes of data.\n"
     "^C\n"
     "$ eval $(withhost --host example.com=10.0.0.1 --export)\n"
@@ -117,16 +117,9 @@ int main(int argc, char **argv) {
 
   free(ld_preload);
 
-  int args_start = 0;
-  for (; args_start < argc; args_start++) {
-    if (!strcmp(argv[args_start], "--")) {
-      break;
-    }
-  }
-
-  if (++args_start < argc) {
-    char *prog = argv[args_start];
-    execvp(prog, argv + args_start);
+  if (optind < argc) {
+    char *prog = argv[optind];
+    execvp(prog, argv + optind);
     err(EXIT_FAILURE, "exec '%s' failed", prog);
   } else {
     errx(EXIT_FAILURE, "not invoking any program");

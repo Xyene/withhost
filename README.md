@@ -6,7 +6,7 @@ Some potential use-cases include accessing backend nodes behind a load balancer,
 
 ## Usage
 ```
-usage: withhost [-h <host>] [--export] [--version] [--help] -- [<program> ...]
+usage: withhost [-h <host>] [--export] [--version] [--help] [<program> ...]
 
 Overrides host lookups for a given command.
 
@@ -20,9 +20,9 @@ For setuid executables, withhost must be invoked with root privileges,
 otherwise it will not work.
 
 Examples:
-$ withhost --host example.com=10.0.0.1 -- getent hosts 10.0.0.1
+$ withhost --host example.com=10.0.0.1 getent hosts 10.0.0.1
 10.0.0.1        example.com
-$ sudo withhost --host example.com=10.0.0.1 -- ping example.com
+$ sudo withhost --host example.com=10.0.0.1 ping example.com
 PING example.com (10.0.0.1) 56(84) bytes of data.
 ^C
 $ eval $(withhost --host example.com=10.0.0.1 --export)
